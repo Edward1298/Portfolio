@@ -89,6 +89,8 @@ Every component lives in its own folder under `src/components/`, named after the
 
 ```
 src/components/
+├── EffectBoundary/
+│   └── EffectBoundary.jsx          # Error boundary that silently swallows canvas/effect crashes
 ├── Nav/
 │   └── Nav.jsx
 ├── LightningBackground/
@@ -174,4 +176,4 @@ Before creating any new file or folder under `src/` (or at root level), check th
 
 ---
 
-*Last updated: phase 0 — initial structure defined.*
+*Last updated: phase 2 — EffectBoundary component added; all phase 0–2 folders and files mapped.*
