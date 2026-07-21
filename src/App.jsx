@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { motion } from 'framer-motion'
 import Nav from './components/Nav/Nav.jsx'
 import Landing from './components/Landing/Landing.jsx'
 import About from './components/About/About.jsx'
@@ -10,8 +11,18 @@ import LightningBackground from './components/LightningBackground/LightningBackg
 import CursorSparkTrail from './components/CursorSparkTrail/CursorSparkTrail.jsx'
 import EffectBoundary from './components/EffectBoundary/EffectBoundary.jsx'
 import { useInView } from './hooks/useInView.js'
+import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion.js'
+
+const sectionMotion = {
+  initial: { opacity: 0, y: 40 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.1 },
+  transition: { duration: 0.7, ease: 'easeOut' },
+}
 
 export default function App() {
+  const reduced = usePrefersReducedMotion()
+
   const [landingRef, landingInView] = useInView({ threshold: 0.3, rootMargin: '-20% 0px -20% 0px' })
   const [aboutRef, aboutInView] = useInView({ threshold: 0.3, rootMargin: '-20% 0px -20% 0px' })
   const [skillsRef, skillsInView] = useInView({ threshold: 0.3, rootMargin: '-20% 0px -20% 0px' })
@@ -34,6 +45,9 @@ export default function App() {
     return 'landing'
   }, [landingInView, aboutInView, skillsInView, projectsInView, certificationsInView, contactInView])
 
+  const Wrapper = reduced ? 'div' : motion.div
+  const wrapperProps = reduced ? {} : sectionMotion
+
   return (
     <>
       <EffectBoundary>
@@ -43,21 +57,21 @@ export default function App() {
       <div ref={landingRef}>
         <Landing />
       </div>
-      <div ref={aboutRef}>
+      <Wrapper ref={aboutRef} {...wrapperProps}>
         <About />
-      </div>
-      <div ref={skillsRef}>
+      </Wrapper>
+      <Wrapper ref={skillsRef} {...wrapperProps}>
         <SkillsKeyboard />
-      </div>
-      <div ref={projectsRef}>
+      </Wrapper>
+      <Wrapper ref={projectsRef} {...wrapperProps}>
         <Projects />
-      </div>
-      <div ref={certificationsRef}>
+      </Wrapper>
+      <Wrapper ref={certificationsRef} {...wrapperProps}>
         <Certifications />
-      </div>
-      <div ref={contactRef}>
+      </Wrapper>
+      <Wrapper ref={contactRef} {...wrapperProps}>
         <Contact />
-      </div>
+      </Wrapper>
       <EffectBoundary>
         <CursorSparkTrail />
       </EffectBoundary>

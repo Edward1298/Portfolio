@@ -18,3 +18,32 @@
     outline-offset: 2px;
   }
 }
+
+@layer utilities {
+  @keyframes throb {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 0.85; }
+  }
+
+  @keyframes travel-pulse {
+    0% { top: -12%; }
+    100% { top: 112%; }
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 12px rgba(210,230,255,0.6); }
+    50% { transform: scale(1.3); box-shadow: 0 0 24px rgba(210,230,255,0.9); }
+  }
+
+  .animate-throb {
+    animation: throb 3s ease-in-out infinite;
+  }
+
+  .animate-travel-pulse {
+    animation: travel-pulse 2.8s ease-in-out infinite;
+  }
+
+  .animate-pulse-dot {
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+}
