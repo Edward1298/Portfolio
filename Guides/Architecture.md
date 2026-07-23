@@ -113,8 +113,10 @@ src/components/
 │       └── ProjectCard.jsx
 ├── Certifications/
 │   ├── Certifications.jsx
-│   └── CertificationCard/    # Sub-component of Certifications
-│       └── CertificationCard.jsx
+│   ├── CertificationCard/    # Sub-component of Certifications
+│   │   └── CertificationCard.jsx
+│   └── CertificationLightbox/  # Sub-component — full-image modal opened from the center card
+│       └── CertificationLightbox.jsx
 └── Contact/
     └── Contact.jsx
 ```
@@ -176,4 +178,4 @@ Before creating any new file or folder under `src/` (or at root level), check th
 
 ---
 
-*Last updated: skills keyboard Spline scene removed — section is now a CSS-only keycap grid (see `specs/phase-5-skills.md`).*
+*Last updated: skills keyboard Spline scene removed — section is now a CSS-only keycap grid (see `specs/phase-5-skills.md`). Certifications carousel rebuilt as a transform-based 3-up infinite carousel with a `CertificationLightbox` sub-component — departs from phase-9 §9.3 native scroll-snap (see `specs/phase-9-polish.md`).*

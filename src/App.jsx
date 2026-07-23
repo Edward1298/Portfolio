@@ -1,11 +1,8 @@
-import { useMemo } from 'react'
+import { useMemo, lazy, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import Nav from './components/Nav/Nav.jsx'
 import Landing from './components/Landing/Landing.jsx'
 import About from './components/About/About.jsx'
-import SkillsKeyboard from './components/SkillsKeyboard/SkillsKeyboard.jsx'
-import Projects from './components/Projects/Projects.jsx'
-import Certifications from './components/Certifications/Certifications.jsx'
 import Contact from './components/Contact/Contact.jsx'
 import LightningBackground from './components/LightningBackground/LightningBackground.jsx'
 import CursorSparkTrail from './components/CursorSparkTrail/CursorSparkTrail.jsx'
@@ -13,12 +10,21 @@ import EffectBoundary from './components/EffectBoundary/EffectBoundary.jsx'
 import { useInView } from './hooks/useInView.js'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion.js'
 
+// Lazy-load heavy sections — chunks load in parallel on initial render,
+// Suspense fallback preserves layout height so the IntersectionObserver
+// for active-section highlighting stays accurate during the load.
+const LazySkills = lazy(() => import('./components/SkillsKeyboard/SkillsKeyboard.jsx'))
+const LazyProjects = lazy(() => import('./components/Projects/Projects.jsx'))
+const LazyCerts = lazy(() => import('./components/Certifications/Certifications.jsx'))
+
 const sectionMotion = {
   initial: { opacity: 0, y: 40 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.1 },
   transition: { duration: 0.7, ease: 'easeOut' },
 }
+
+const lazyFallback = <div className="min-h-screen" />
 
 export default function App() {
   const reduced = usePrefersReducedMotion()
@@ -61,13 +67,19 @@ export default function App() {
         <About />
       </Wrapper>
       <Wrapper ref={skillsRef} {...wrapperProps}>
-        <SkillsKeyboard />
+        <Suspense fallback={lazyFallback}>
+          <LazySkills />
+        </Suspense>
       </Wrapper>
       <Wrapper ref={projectsRef} {...wrapperProps}>
-        <Projects />
+        <Suspense fallback={lazyFallback}>
+          <LazyProjects />
+        </Suspense>
       </Wrapper>
       <Wrapper ref={certificationsRef} {...wrapperProps}>
-        <Certifications />
+        <Suspense fallback={lazyFallback}>
+          <LazyCerts />
+        </Suspense>
       </Wrapper>
       <Wrapper ref={contactRef} {...wrapperProps}>
         <Contact />
