@@ -16,6 +16,7 @@ No database required.
 | 4 | Projects | **4 projects**, stacking-cards style per motionsites.ai reference (updated from 5 per phase-6 spec) |
 | 5 | Certifications | **5 titles**, horizontal carousel with cards |
 | 6 | Skills keyboard sound | **No mute** — sound assumed subtle |
+| 7 | Skills keyboard interaction polish | CSS-only keycap grid (no Spline, no GSAP, no new deps). Added: **cursor-follow spotlight** `#5B8FFF` (hover-only — fades in on `mouseenter`, out on `mouseleave`); **on-press spark burst** (~400ms fade, accent/bolt-core colors); **permanent board tilt** via CSS `perspective` + slight `rotateX` (a few degrees only); **idle micro-flicker** = nice-to-have, **not** DoD. All decorative motion gates on `prefers-reduced-motion: reduce` (keyboard stays fully usable, static fallback). |
 
 ---
 
@@ -91,6 +92,10 @@ No database required.
 | 5.4 | **No mute control** (per resolved decision #6) |
 | 5.5 | Keyboard scoped to this section — no global persistence |
 | 5.6 | Section entrance animation — keys stagger-reveal |
+| 5.7 | **Cursor-follow spotlight** — soft radial glow `#5B8FFF` tracking mouse across the whole board (not per-key); fades in on `mouseenter`, out on `mouseleave`. Disabled under `prefers-reduced-motion`. |
+| 5.8 | **On-press spark burst** — small accent/bolt-core colored spark particles burst from the clicked key on `onClick`/`keydown` (never hover), fade out under ~400ms. Disabled under `prefers-reduced-motion`. |
+| 5.9 | **Permanent board tilt** — whole keyboard grid uses CSS `perspective` + slight `rotateX` (a few degrees only) for depth; distinct from each key's individual 3D-press. Flattened under `prefers-reduced-motion`. |
+| 5.10 | *(Nice-to-have)* **Idle micro-flicker** — a random key does a brief subtle flash occasionally without interaction, like distant lightning. Non-blocking; only if it stays simple. |
 
 ---
 
@@ -102,7 +107,7 @@ No database required.
 | 6.2 | **Stacking scroll** with Framer Motion `useScroll` + `useTransform` — one card visible, next stacks on top as you scroll |
 | 6.3 | Fallback: if Framer Motion pinning isn't precise, swap to GSAP ScrollTrigger `pin` |
 | 6.4 | Populate from `/src/data/projects.js` — keeps content decoupled |
-| 6.5 | **5 projects** total (per resolved decision #4), style matching motionsites.ai reference |
+| 6.5 | **4 projects** total (per resolved decision #4), style matching motionsites.ai reference |
 | 6.6 | **Mobile** — test touch scroll behavior, possibly fall back to vertical list on small screens |
 
 ---

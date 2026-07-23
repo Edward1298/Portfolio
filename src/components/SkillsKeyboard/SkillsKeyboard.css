@@ -1,0 +1,71 @@
+/* Mechanical keycap 3D press — solid bottom edge that sinks on :active */
+.keycap {
+  box-shadow:
+    0 5px 0 #0a0c12,
+    0 8px 16px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease,
+    border-color 0.2s ease;
+}
+
+.keycap:active {
+  transform: translateY(5px);
+  box-shadow:
+    0 0 0 #0a0c12,
+    inset 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .keycap {
+    transition: border-color 0.2s ease;
+  }
+
+  .keycap:active {
+    transform: none;
+    background-color: #1a1e28;
+    box-shadow:
+      0 5px 0 #0a0c12,
+      0 8px 16px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Permanent board tilt via perspective + rotateX */
+.tilt-wrapper {
+  perspective: 1000px;
+}
+
+.tilt-grid.tilted {
+  transform: rotateX(7deg);
+  transform-style: preserve-3d;
+}
+
+/* Spotlight fade-in */
+.fast-fade-in {
+  animation: fade-in 200ms ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Idle glow flicker on a random key */
+@keyframes flicker {
+  0%,
+  100% {
+    box-shadow:
+      0 5px 0 #0a0c12,
+      0 8px 16px rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow:
+      0 0 18px rgba(91, 143, 255, 0.55),
+      0 5px 0 #0a0c12,
+      0 8px 16px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.flicker-glow .keycap {
+  animation: flicker 0.35s ease-out;
+}

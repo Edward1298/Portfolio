@@ -58,7 +58,6 @@ Portfolio/
 src/
 ├── main.jsx                  # Vite/React entry point
 ├── App.jsx                   # Single-page root, renders all sections + nav
-├── App.css                   # App-level styles
 ├── index.css                 # Tailwind directives + global base styles
 ├── components/               # All components (see section 4)
 ├── hooks/                    # Reusable React hooks
@@ -105,6 +104,7 @@ src/components/
 │       └── Timeline.jsx
 ├── SkillsKeyboard/           # Skills section — the interactive keyboard
 │   ├── SkillsKeyboard.jsx
+│   ├── SkillsKeyboard.css     # 3D keycap press effect
 │   └── SkillKey/             # Sub-component — individual keycap
 │       └── SkillKey.jsx
 ├── Projects/
@@ -176,4 +176,4 @@ Before creating any new file or folder under `src/` (or at root level), check th
 
 ---
 
-*Last updated: phase 2 — EffectBoundary component added; all phase 0–2 folders and files mapped.*
+*Last updated: skills keyboard Spline scene removed — section is now a CSS-only keycap grid (see `specs/phase-5-skills.md`).*

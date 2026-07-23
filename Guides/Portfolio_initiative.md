@@ -14,7 +14,6 @@ A personal portfolio website. Format: **single-page scroll** — no routing, no 
 
 - **Background:** small lightning bolts (not one large bolt), active across all sections.
 - **Cursor:** a spark trail that feels consistent with the background bolts — storm, not fog.
-- Vibe reference: [nareshkhatri.site](https://www.nareshkhatri.site/).
 
 ---
 
