@@ -10,12 +10,12 @@ export default {
         accent: "#5B8FFF",
         "accent-glow": "#7BA3FF",
         "accent-dark": "#3B6FD9",
-        highlight: "#D2E6FF",
+        highlight: "#DFE8F5",
         cta: "#F2A93B",
         "cta-hover": "#D98A2E",
-        primary: "#F5F6F8",
-        secondary: "#9AA3B2",
-        disabled: "#6B7280",
+        primary: "#F0F2F6",
+        secondary: "#A4AEB8",
+        disabled: "#7A8491",
         subtle: "#2A2E3A",
       },
       fontFamily: {
@@ -29,6 +29,15 @@ export default {
         "glow-lg": "0 0 48px rgba(91,143,255,0.6)",
         card: "0 4px 24px rgba(0,0,0,0.4)",
         pressed: "inset 0 2px 8px rgba(0,0,0,0.6)",
+      },
+      animation: {
+        "star-pulse": "starPulse 2s ease-in-out infinite",
+      },
+      keyframes: {
+        starPulse: {
+          "0%, 100%": { boxShadow: "0 0 6px rgba(91,143,255,0.4)", transform: "scale(1)" },
+          "50%": { boxShadow: "0 0 18px rgba(91,143,255,0.8)", transform: "scale(1.15)" },
+        },
       },
       borderRadius: {
         sm: "4px",

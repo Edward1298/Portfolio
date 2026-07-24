@@ -51,6 +51,7 @@ No database required.
 | Step | What |
 |---|---|
 | 2.1 | **Lightning canvas** — `LightningBackground.jsx` based on Lightning.jsx reference; small background bolts (depth 5, 2–3 simultaneous, `shadowBlur` active) |
+| 2.1c | **Fog layer** — `FogBackground.jsx` (own component, mounted alongside lightning): WebGL fragment-shader FBM noise, dark storm-tuned palette (base `#0A0C12`, mist `rgba(0.16,0.19,0.28)`, accent tinted toward `#5B8FFF`). Behind lightning canvas (z 0 vs lightning z 1). Canvas is `position:fixed` (viewport-sized, efficient) but the shader displaces its noise coords by `window.scrollY / innerHeight * 0.5` — the fog drifts at half the page scroll speed (gentle parallax, less nauseating than near-1:1). Perf gates: DPR cap 1, half-res render + CSS upscale, 6 FBM octaves desktop / 4 mobile, `IntersectionObserver` lazy-init on `#landing`, `visibilitychange` pause. Mobile throttle (`<768px`). Reduced-motion: **deliberate exception** — fog keeps its gentle ambient drift + scroll-linked displacement (slow/ambient, atmospheric base of the site); lightning still omitted entirely under reduced-motion. |
 | 2.2 | **Lazy-init** — `IntersectionObserver` on the Landing section starts the canvas loop |
 | 2.3 | **`prefers-reduced-motion`** — disable canvas entirely if detected |
 | 2.4 | **Mobile throttle** — if `window.innerWidth < 768`, reduce bolt count or disable |

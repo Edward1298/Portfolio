@@ -13,25 +13,25 @@ export default function About() {
     : {
         initial: { opacity: 0, y: 20 },
         whileInView: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-        viewport: { once: true, amount: 0.3 },
+        viewport: { once: false, amount: 0.3 },
       }
 
   return (
     <section id="about" className="relative z-10 scroll-mt-20 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl px-6 sm:px-10">
-        <BioWrapper {...bioProps}>
+        <BioWrapper {...bioProps} className="text-center">
           <span className="font-mono text-accent-glow text-sm tracking-widest uppercase">
             About Me
           </span>
           <h2 className="font-display text-primary text-3xl sm:text-4xl font-semibold mt-2 mb-6">
             Who I am
           </h2>
-          <p className="font-sans text-primary text-base sm:text-lg leading-relaxed max-w-2xl">
+          <p className="font-sans text-primary text-base sm:text-lg leading-relaxed max-w-2xl mx-auto text-center">
             {BIO}
           </p>
         </BioWrapper>
 
-        <div className="mt-16 sm:mt-24">
+        <div className="mt-16 sm:mt-24 text-center">
           <span className="font-mono text-accent text-sm tracking-widest uppercase">
             My journey
           </span>
