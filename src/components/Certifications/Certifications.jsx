@@ -8,7 +8,7 @@ import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion.js'
 import { useMediaQuery } from '../../hooks/useMediaQuery.js'
 
 const N = certifications.length
-const CARD_W = 576 // 2x of original 288
+const CARD_W = 520
 const GAP = 48
 const STEP = CARD_W + GAP
 // card height: image (16:9) + body block
@@ -49,9 +49,9 @@ export default function Certifications() {
   return (
     <section
       id="certifications"
-      className="relative z-10 scroll-mt-20 py-20 sm:py-28"
+      className="relative z-10 scroll-mt-20 pt-20 sm:pt-28 pb-40 sm:pb-[260px]"
     >
-      <div className="mx-auto max-w-5xl px-6 sm:px-10">
+      <div className="mx-auto max-w-5xl px-6 sm:px-10 text-center">
         <span className="font-mono text-accent-glow text-sm tracking-widest uppercase">
           Credentials
         </span>
@@ -122,8 +122,8 @@ export default function Certifications() {
               type="button"
               aria-label={`Go to ${cert.title}`}
               onClick={() => setIndex(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === index ? 'w-6 bg-accent' : 'w-2 bg-subtle hover:bg-accent/50'
+              className={`rounded-full transition-all duration-300 ${
+                i === index ? 'h-3 w-3 bg-accent animate-star-pulse' : 'h-2 w-2 bg-subtle hover:bg-accent/50'
               }`}
             />
           ))}

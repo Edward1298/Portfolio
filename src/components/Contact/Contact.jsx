@@ -99,7 +99,7 @@ export default function Contact() {
 
   return (
     <section id="contact" className="relative z-10 scroll-mt-20 py-20 sm:py-28">
-      <div className="mx-auto max-w-lg px-6 sm:px-10">
+      <div className="mx-auto max-w-lg px-6 sm:px-10 text-center">
         <span className="font-mono text-accent-glow text-sm tracking-widest uppercase">
           Get in touch
         </span>

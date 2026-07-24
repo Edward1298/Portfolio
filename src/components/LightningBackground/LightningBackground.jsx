@@ -65,50 +65,64 @@ export default function LightningBackground() {
     resize()
     window.addEventListener('resize', resize)
 
-    function drawBolt(points, alpha, lineWidth) {
-      if (points.length < 2) return
-      ctx.beginPath()
-      ctx.moveTo(points[0].x, points[0].y)
-      for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y)
+  function drawBolt(points, alpha, lineWidth) {
+    if (points.length < 2) return
+    ctx.beginPath()
+    ctx.moveTo(points[0].x, points[0].y)
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y)
 
-      ctx.strokeStyle = `rgba(${ACCENT}, ${alpha})`
-      ctx.lineWidth = lineWidth
-      ctx.lineCap = 'round'
-      ctx.lineJoin = 'round'
-      ctx.shadowColor = `rgba(${ACCENT}, ${alpha * 0.7})`
-      ctx.shadowBlur = isDesktop ? 20 : 10
-      ctx.stroke()
+    ctx.strokeStyle = `rgba(${ACCENT}, ${alpha})`
+    ctx.lineWidth = lineWidth
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    ctx.shadowColor = `rgba(${ACCENT}, ${alpha * 0.7})`
+    ctx.shadowBlur = isDesktop ? 28 : 14
+    ctx.stroke()
 
-      ctx.strokeStyle = `rgba(210, 230, 255, ${alpha * 0.65})`
-      ctx.lineWidth = lineWidth * 0.3
-      ctx.shadowBlur = isDesktop ? 5 : 2
-      ctx.stroke()
+    ctx.strokeStyle = `rgba(210, 230, 255, ${alpha * 0.65})`
+    ctx.lineWidth = lineWidth * 0.3
+    ctx.shadowBlur = isDesktop ? 7 : 3
+    ctx.stroke()
 
-      ctx.shadowBlur = 0
+    ctx.shadowBlur = 0
+  }
+
+  function loop(now) {
+    animId = requestAnimationFrame(loop)
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    if (now >= nextStrike && strikes.length < maxStrikes) {
+      strikes.push({ ...createStrike(canvas.width, canvas.height), born: now })
+      nextStrike = now + randomBetween(1400, 4000)
     }
 
-    function loop(now) {
-      animId = requestAnimationFrame(loop)
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // First pass: age + compute flash alpha, drop expired strikes
+    let flashAlpha = 0
+    strikes = strikes.filter((s) => {
+      const age = now - s.born
+      const duration = 450
+      if (age > duration) return false
 
-      if (now >= nextStrike && strikes.length < maxStrikes) {
-        strikes.push({ ...createStrike(canvas.width, canvas.height), born: now })
-        nextStrike = now + randomBetween(1400, 2000)
-      }
+      const t = age / duration
+      const alpha = t < 0.1 ? t / 0.1 : 1 - ((t - 0.1) / 0.9)
+      if (alpha > flashAlpha) flashAlpha = alpha
+      s._alpha = alpha
+      return true
+    })
 
-      strikes = strikes.filter((s) => {
-        const age = now - s.born
-        const duration = 450
-        if (age > duration) return false
-
-        const t = age / duration
-        const alpha = t < 0.1 ? t / 0.1 : 1 - ((t - 0.1) / 0.9)
-
-        drawBolt(s.mainPoints, alpha * 0.8, 1.8)
-        s.branches.forEach((b) => drawBolt(b, alpha * 0.4, 1.0))
-        return true
-      })
+    // Full-canvas flash — illuminates the fog below (canvas sits above fog at z 1).
+    // Peaks at strike birth, fades with the bolt. Bluish-white to match bolt core.
+    if (flashAlpha > 0) {
+      ctx.fillStyle = `rgba(210, 230, 255, ${flashAlpha * 0.12})`
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
     }
+
+    // Bolts render on top of the flash
+    strikes.forEach((s) => {
+      drawBolt(s.mainPoints, s._alpha * 1.0, 1.8)
+      s.branches.forEach((b) => drawBolt(b, s._alpha * 0.5, 1.0))
+    })
+  }
 
     function startLoop() {
       if (!started) {
@@ -149,8 +163,8 @@ export default function LightningBackground() {
         width: '100%',
         height: '100%',
         pointerEvents: 'none',
-        zIndex: 0,
-        opacity: 0.5,
+        zIndex: 1,
+        opacity: 0.7,
       }}
     />
   )

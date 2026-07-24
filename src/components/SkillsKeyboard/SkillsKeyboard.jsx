@@ -128,7 +128,7 @@ export default function SkillsKeyboard() {
 
   return (
     <section id="skills" className="relative z-10 scroll-mt-20 py-20 sm:py-28">
-      <div className="mx-auto max-w-5xl px-6 sm:px-10">
+      <div className="mx-auto max-w-5xl px-6 sm:px-10 text-center">
         <span className="font-mono text-accent-glow text-sm tracking-widest uppercase">
           Toolbox
         </span>
@@ -196,7 +196,7 @@ export default function SkillsKeyboard() {
                   : {
                       initial: { opacity: 0, y: 24 },
                       whileInView: { opacity: 1, y: 0 },
-                      viewport: { once: true, amount: 0.2 },
+                      viewport: { once: false, amount: 0.2 },
                       transition: {
                         delay: getDelay(index),
                         duration: 0.45,

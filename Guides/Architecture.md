@@ -94,6 +94,8 @@ src/components/
 │   └── Nav.jsx
 ├── LightningBackground/
 │   └── LightningBackground.jsx
+├── FogBackground/                 # WebGL fragment-shader fog, behind lightning (z 0)
+│   └── FogBackground.jsx
 ├── CursorSparkTrail/
 │   └── CursorSparkTrail.jsx
 ├── Landing/
@@ -178,4 +180,4 @@ Before creating any new file or folder under `src/` (or at root level), check th
 
 ---
 
-*Last updated: skills keyboard Spline scene removed — section is now a CSS-only keycap grid (see `specs/phase-5-skills.md`). Certifications carousel rebuilt as a transform-based 3-up infinite carousel with a `CertificationLightbox` sub-component — departs from phase-9 §9.3 native scroll-snap (see `specs/phase-9-polish.md`).*
+*Last updated: added `FogBackground` component — WebGL fragment-shader fog (dark storm-tuned palette, FBM noise), mounted behind the lightning canvas (z 0 vs lightning z 1), same site-wide + reduced-motion (omit) + mobile-throttle rules as `LightningBackground`. Certifications carousel rebuilt as a transform-based 3-up infinite carousel with a `CertificationLightbox` sub-component — departs from phase-9 §9.3 native scroll-snap (see `specs/phase-9-polish.md`).*
