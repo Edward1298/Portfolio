@@ -53,11 +53,11 @@ export default function Projects() {
 
   return (
     <section id="projects" className="relative z-10 scroll-mt-20 py-20 sm:py-28">
-      <div className="mx-auto max-w-5xl px-6 sm:px-10 mb-10 sm:mb-14">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-10 text-center">
         <span className="font-mono text-accent-glow text-sm tracking-widest uppercase">
           Selected work
         </span>
-        <h2 className="font-display text-primary text-3xl sm:text-4xl font-semibold mt-2">
+        <h2 className="font-display text-primary text-3xl sm:text-4xl font-semibold mt-2 mb-10 sm:mb-14">
           Projects
         </h2>
       </div>

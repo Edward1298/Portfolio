@@ -56,7 +56,7 @@ export default function Timeline() {
                       variants: terminatorVariants,
                       initial: 'hidden',
                       whileInView: 'visible',
-                      viewport: { once: true, amount: 0.5 },
+                      viewport: { once: false, amount: 0.5 },
                     })}
                 className="relative flex flex-col items-center pt-12"
               >
@@ -83,7 +83,7 @@ export default function Timeline() {
                     variants,
                     initial: 'hidden',
                     whileInView: 'visible',
-                    viewport: { once: true, amount: 0.3 },
+                    viewport: { once: false, amount: 0.3 },
                   })}
               className="relative grid grid-cols-2 gap-x-8 sm:gap-x-16 mb-14 sm:mb-20 last:mb-0"
             >

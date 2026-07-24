@@ -34,12 +34,12 @@ Theme: **night storm** — near-black background, electric blue protagonist, war
 | Lightning accent | `#5B8FFF` | `text-accent`, `bg-accent` | Bolts, cursor trail, links, hover states |
 | Accent hover / glow | `#7BA3FF` | `text-accent-glow` | Glow effects, link hovers, soft highlights |
 | Accent pressed | `#3B6FD9` | `bg-accent-dark` | Active/pressed states |
-| Bolt core / highlights | `#D2E6FF` | `text-highlight` | Emphasized text, punctual highlights |
+| Bolt core / highlights | `#DFE8F5` | `text-highlight` | Emphasized text, punctual highlights |
 | Warm CTA | `#F2A93B` | `text-cta`, `bg-cta` | Calls to action — **use sparingly, 2-3 touchpoints max** |
 | Warm CTA hover | `#D98A2E` | `bg-cta-hover` | CTA hover / pressed state |
-| Primary text | `#F5F6F8` | `text-primary` | Off-white body text |
-| Secondary text | `#9AA3B2` | `text-secondary` | Muted labels, captions |
-| Disabled / muted | `#6B7280` | `text-disabled` | Disabled states, inactive elements |
+| Primary text | `#F0F2F6` | `text-primary` | Off-white body text |
+| Secondary text | `#A4AEB8` | `text-secondary` | Muted labels, captions |
+| Disabled / muted | `#7A8491` | `text-disabled` | Disabled states, inactive elements |
 | Border subtle | `#2A2E3A` | `border-subtle` | Card borders, separators |
 
 ### Usage Rules

@@ -21,23 +21,23 @@ export default function Nav({ activeSection = 'landing' }) {
   }, [])
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-bg/90 backdrop-blur-sm border-b border-subtle">
+    <header className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
       <nav
-        className={`mx-auto max-w-7xl px-4 ${
-          isMobile ? 'overflow-x-auto' : ''
-        }`}
+        className={isMobile ? 'overflow-x-auto' : ''}
         aria-label="Main"
       >
-        <ul className={`flex items-center gap-1 ${isMobile ? 'min-w-max' : 'justify-end'} py-3`}>
+        <ul
+          className={`flex items-center justify-center gap-0.5 sm:gap-1 ${isMobile ? 'min-w-max' : ''}`}
+        >
           {LINKS.map(({ label, href }) => {
             const isActive = activeSection === href.slice(1)
             return (
               <li key={href}>
                 <a
                   href={href}
-                  className={`inline-flex items-center px-3 py-2 text-sm font-medium transition-colors rounded-md min-h-[44px] min-w-[44px] ${
+                  className={`inline-flex items-center px-2 sm:px-3 py-2 text-sm font-medium transition-all duration-300 rounded-md min-h-[44px] ${
                     isActive
-                      ? 'text-accent shadow-glow-sm'
+                      ? 'text-accent'
                       : 'text-secondary hover:text-primary'
                   }`}
                 >
