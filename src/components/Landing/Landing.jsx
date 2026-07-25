@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Github, Linkedin, FileDown, ChevronDown } from 'lucide-react'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion.js'
+import BlurText from './BlurText/BlurText.jsx'
 
 const LINKS = [
   {
@@ -29,24 +30,6 @@ const helloVariants = {
     opacity: 1,
     y: 0,
     transition: { delay: 1.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-  },
-}
-
-const eduardoVariants = {
-  hidden: { opacity: 0, x: 120 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { delay: 1.7, duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-  },
-}
-
-const cespedesVariants = {
-  hidden: { opacity: 0, y: -50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { delay: 2.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] },
   },
 }
 
@@ -109,7 +92,7 @@ export default function Landing() {
           </nav>
         </div>
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none">
+        <div className="absolute bottom-8 inset-x-0 mx-auto w-fit flex flex-col items-center gap-1 pointer-events-none">
           <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-disabled">
             Scroll
           </span>
@@ -131,7 +114,7 @@ export default function Landing() {
   return (
     <section
       id="landing"
-      className="relative z-10 min-h-screen flex items-center justify-center overflow-x-hidden"
+      className="relative z-10 min-h-screen flex items-center justify-center"
     >
       <motion.div
         initial={{ opacity: 1 }}
@@ -150,23 +133,22 @@ export default function Landing() {
           Hello, I&apos;m
         </motion.span>
 
-        <motion.div
-          variants={eduardoVariants}
-          initial="hidden"
-          animate="visible"
-          className="mt-3 bg-gradient-to-br from-primary via-highlight to-accent-glow bg-clip-text text-transparent font-display font-semibold leading-[0.88] tracking-tight text-5xl sm:text-6xl md:text-7xl lg:text-[7rem]"
-        >
-          <span className="block">Eduardo</span>
-        </motion.div>
-
-        <motion.span
-          variants={cespedesVariants}
-          initial="hidden"
-          animate="visible"
-          className="block bg-gradient-to-br from-primary via-highlight to-accent-glow bg-clip-text text-transparent font-display font-semibold leading-[0.88] tracking-tight text-5xl sm:text-6xl md:text-7xl lg:text-[7rem]"
-        >
-          Céspedes
-        </motion.span>
+        <div className="mt-3 font-display font-semibold leading-[0.88] tracking-tight text-5xl sm:text-6xl md:text-7xl lg:text-[7rem]">
+          <BlurText
+            text="Eduardo Céspedes"
+            delay={300}
+            initialDelay={1700}
+            animateBy="words"
+            direction="left"
+            animationFrom={{ filter: 'blur(12px)', opacity: 0, x: -60 }}
+            animationTo={[
+              { filter: 'blur(5px)', opacity: 0.5, x: 5 },
+              { filter: 'blur(0px)', opacity: 1, x: 0 }
+            ]}
+            stepDuration={0.3}
+            gradientColors={['#F0F2F6', '#DFE8F5', '#7BA3FF']}
+          />
+        </div>
 
         <motion.p
           variants={roleVariants}
@@ -206,7 +188,7 @@ export default function Landing() {
         variants={scrollVariants}
         initial="hidden"
         animate="visible"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none"
+        className="absolute bottom-8 inset-x-0 mx-auto w-fit flex flex-col items-center gap-1 pointer-events-none"
       >
         <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-disabled">
           Scroll
