@@ -104,11 +104,9 @@ src/components/
 │   ├── About.jsx
 │   └── Timeline/             # Sub-component of About
 │       └── Timeline.jsx
-├── SkillsKeyboard/           # Skills section — the interactive keyboard
-│   ├── SkillsKeyboard.jsx
-│   ├── SkillsKeyboard.css     # 3D keycap press effect
-│   └── SkillKey/             # Sub-component — individual keycap
-│       └── SkillKey.jsx
+├── SkillsCircuit/            # Skills section — circuit network visualization
+│   ├── SkillsCircuit.jsx
+│   └── ShinyText.jsx         # Shiny animated text (CSS keyframe gradient) centered over the circuit
 ├── Projects/
 │   ├── Projects.jsx
 │   └── ProjectCard/          # Sub-component of Projects
@@ -119,6 +117,8 @@ src/components/
 │   │   └── CertificationCard.jsx
 │   └── CertificationLightbox/  # Sub-component — full-image modal opened from the center card
 │       └── CertificationLightbox.jsx
+├── Footer/
+│   └── Footer.jsx
 └── Contact/
     └── Contact.jsx
 ```
