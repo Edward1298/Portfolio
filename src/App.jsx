@@ -4,6 +4,7 @@ import Nav from './components/Nav/Nav.jsx'
 import Landing from './components/Landing/Landing.jsx'
 import About from './components/About/About.jsx'
 import Contact from './components/Contact/Contact.jsx'
+import Footer from './components/Footer/Footer.jsx'
 import LightningBackground from './components/LightningBackground/LightningBackground.jsx'
 import FogBackground from './components/FogBackground/FogBackground.jsx'
 import CursorSparkTrail from './components/CursorSparkTrail/CursorSparkTrail.jsx'
@@ -14,7 +15,7 @@ import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion.js'
 // Lazy-load heavy sections — chunks load in parallel on initial render,
 // Suspense fallback preserves layout height so the IntersectionObserver
 // for active-section highlighting stays accurate during the load.
-const LazySkills = lazy(() => import('./components/SkillsKeyboard/SkillsKeyboard.jsx'))
+const LazySkills = lazy(() => import('./components/SkillsCircuit/SkillsCircuit.jsx'))
 const LazyProjects = lazy(() => import('./components/Projects/Projects.jsx'))
 const LazyCerts = lazy(() => import('./components/Certifications/Certifications.jsx'))
 
@@ -88,6 +89,7 @@ export default function App() {
       <Wrapper ref={contactRef} {...wrapperProps}>
         <Contact />
       </Wrapper>
+      <Footer />
       <EffectBoundary>
         <CursorSparkTrail />
       </EffectBoundary>
