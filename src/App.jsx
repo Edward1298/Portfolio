@@ -15,7 +15,7 @@ import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion.js'
 // Lazy-load heavy sections — chunks load in parallel on initial render,
 // Suspense fallback preserves layout height so the IntersectionObserver
 // for active-section highlighting stays accurate during the load.
-const LazySkills = lazy(() => import('./components/SkillsCircuit/SkillsCircuit.jsx'))
+const LazySkills = lazy(() => import('./components/SkillsLoop/SkillsLoop.jsx'))
 const LazyProjects = lazy(() => import('./components/Projects/Projects.jsx'))
 const LazyCerts = lazy(() => import('./components/Certifications/Certifications.jsx'))
 

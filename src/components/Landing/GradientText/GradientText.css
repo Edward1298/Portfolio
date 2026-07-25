@@ -1,0 +1,12 @@
+.animated-gradient-text {
+  display: inline-flex;
+  max-width: fit-content;
+}
+
+.text-content {
+  display: inline;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  white-space: pre-wrap;
+}

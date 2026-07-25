@@ -99,14 +99,20 @@ src/components/
 ├── CursorSparkTrail/
 │   └── CursorSparkTrail.jsx
 ├── Landing/
-│   └── Landing.jsx
+│   ├── Landing.jsx
+│   ├── BlurText/               # Blur entrance + gradient sweep (reactbits, adapted for framer-motion)
+│   │   ├── BlurText.jsx
+│   │   └── BlurText.css
+│   └── GradientText/           # Animated gradient sweep (kept for reference)
+│       ├── GradientText.jsx
+│       └── GradientText.css
 ├── About/
 │   ├── About.jsx
 │   └── Timeline/             # Sub-component of About
 │       └── Timeline.jsx
-├── SkillsCircuit/            # Skills section — circuit network visualization
-│   ├── SkillsCircuit.jsx
-│   └── ShinyText.jsx         # Shiny animated text (CSS keyframe gradient) centered over the circuit
+├── SkillsLoop/               # Skills section — infinite categorized logo marquee
+│   ├── SkillsLoop.jsx
+│   └── SkillsLoop.css
 ├── Projects/
 │   ├── Projects.jsx
 │   └── ProjectCard/          # Sub-component of Projects
@@ -119,8 +125,10 @@ src/components/
 │       └── CertificationLightbox.jsx
 ├── Footer/
 │   └── Footer.jsx
-└── Contact/
-    └── Contact.jsx
+├── Contact/
+│   ├── Contact.jsx
+│   ├── ElectricBorder.jsx       # Canvas-based animated electric border (reactbits)
+│   └── ElectricBorder.css
 ```
 
 ### Per-folder contents
@@ -180,4 +188,4 @@ Before creating any new file or folder under `src/` (or at root level), check th
 
 ---
 
-*Last updated: added `FogBackground` component — WebGL fragment-shader fog (dark storm-tuned palette, FBM noise), mounted behind the lightning canvas (z 0 vs lightning z 1), same site-wide + reduced-motion (omit) + mobile-throttle rules as `LightningBackground`. Certifications carousel rebuilt as a transform-based 3-up infinite carousel with a `CertificationLightbox` sub-component — departs from phase-9 §9.3 native scroll-snap (see `specs/phase-9-polish.md`).*
+*Last updated: replaced `SkillsCircuit/` with `SkillsLoop/` — infinite categorized marquee. No ShinyText or SVG viewBox layout. CSS-flow-based, resize-safe.

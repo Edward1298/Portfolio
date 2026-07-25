@@ -83,20 +83,18 @@ No database required.
 
 ---
 
-## Phase 5 — Skills Section (Interactive Keyboard)
+## Phase 5 — Skills Section (Infinite Logo Loop)
 
 | Step | What |
 |---|---|
-| 5.1 | Create `SkillKey.jsx` — individual keycap with 3D-press effect (Tailwind `transform`, `box-shadow`) |
-| 5.2 | Create `SkillsKeyboard.jsx` — layout grid of keys, each representing a skill |
-| 5.3 | **Sound:** preload audio clip(s) via Howler.js, play `onClick` only |
-| 5.4 | **No mute control** (per resolved decision #6) |
-| 5.5 | Keyboard scoped to this section — no global persistence |
-| 5.6 | Section entrance animation — keys stagger-reveal |
-| 5.7 | **Cursor-follow spotlight** — soft radial glow `#5B8FFF` tracking mouse across the whole board (not per-key); fades in on `mouseenter`, out on `mouseleave`. Disabled under `prefers-reduced-motion`. |
-| 5.8 | **On-press spark burst** — small accent/bolt-core colored spark particles burst from the clicked key on `onClick`/`keydown` (never hover), fade out under ~400ms. Disabled under `prefers-reduced-motion`. |
-| 5.9 | **Permanent board tilt** — whole keyboard grid uses CSS `perspective` + slight `rotateX` (a few degrees only) for depth; distinct from each key's individual 3D-press. Flattened under `prefers-reduced-motion`. |
-| 5.10 | *(Nice-to-have)* **Idle micro-flicker** — a random key does a brief subtle flash occasionally without interaction, like distant lightning. Non-blocking; only if it stays simple. |
+| 5.1 | Replace SkillsCircuit SVG network with `SkillsLoop/` — CSS-flow-based infinite marquee; no fixed-dimension SVG layout, resize-safe by design |
+| 5.2 | Three categorized horizontal rows: Backend (left), Tools (right), Frontend (left) — `data/skills.js` reused as-is via `category` field |
+| 5.3 | Infinite scroll via CSS `@keyframes translateX` (0 → -50%), two copies back-to-back for seamless loop, `mask-image` edge fade |
+| 5.4 | Row hover → `animation-play-state: paused`; chip hover → accent border + `translateY(-2px)` + glow shadow |
+| 5.5 | Dividers between rows: thin `#2A2E3A` line + `#5B8FFF` glow dot traveling 4s linear loop (direction alternates per divider) |
+| 5.6 | `prefers-reduced-motion: reduce` → rows render as static wrapped grid, dividers flat (no animation, dot at 40% opacity) |
+| 5.7 | Image error fallback: `onError` → monogram (first-letter acronym or first 2 chars) in accent color |
+| 5.8 | `aria-hidden="true"` on duplicated second copy; `aria-label` on each track listing all skill names for screen readers |
 
 ---
 
@@ -127,12 +125,16 @@ No database required.
 ## Phase 8 — Contact Section
 
 | Step | What |
-|---|---|
+|---|---|---|
 | 8.1 | "Let's work together" heading + short subtitle |
-| 8.2 | Contact form — name, email, message fields |
-| 8.3 | Submit → send via **Formspree** or **EmailJS** (no backend needed) |
-| 8.4 | Warm CTA accent (`#F2A93B`) on submit button |
-| 8.5 | Success/error feedback state |
+| 8.2 | Contact form — name, email, message, and file attachment fields |
+| 8.3 | Submit via **Formspree** (unchanged integration, extended to support file uploads) |
+| 8.4 | Wrapped in **ElectricBorder** (reactbits Canvas-based animated border) — accent `#5B8FFF` |
+| 8.5 | Regular submit button styled with warm CTA `#F2A93B` — `hover:brightness-110`, disabled state, inline-flex with Send icon and loading spinner |
+| 8.6 | File attachment: dashed-border row, Paperclip icon, accepts PDF/PNG/JPG, 25MB max (Formspree system limit), filename display + remove button |
+| 8.7 | Success/error feedback rendered **inline** inside the electric-bordered card — success replaces form content, error preserves fields |
+| 8.8 | `prefers-reduced-motion` — ElectricBorder replaced with static bordered card (no canvas) |
+| 8.9 | *(removed — SpecularButton dropped, `ogl` dependency no longer needed but may be cleaned up)* |
 
 ---
 
