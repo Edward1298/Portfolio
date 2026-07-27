@@ -10,12 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@splinetool/react-spline": "^4.1.0",
-    "@splinetool/runtime": "^1.12.98",
     "framer-motion": "^12.0.0",
     "howler": "^2.2.4",
     "lucide-react": "^0.400.0",
-    "ogl": "^1.0.11",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "tailwindcss": "^3.4.19"

@@ -27,12 +27,18 @@ No database, no backend, no global state library. No GSAP, no Spline, no carouse
 
 **Tailwind is v3** — PostCSS config uses `tailwindcss` + `autoprefixer`. Do NOT upgrade to v4 or install `@tailwindcss/postcss`.
 
+**Stale deps — do NOT import:** `@splinetool/react-spline`, `@splinetool/runtime`, and `ogl` are in `package.json` but are unused and must not be imported. They were left behind from dropped features.
+
 ## Phase workflow
 
 Implementation proceeds one phase at a time. All phase contracts in `specs/` (phases 0–9).
 - **Phases 0–4 done** (scaffold, nav, lightning/cursor, landing, about).
 - **Phases 5–9 are stubs** — section placeholders only. Do not jump ahead.
 - **Phase 10 was dropped** — no deploy scripts or infra config.
+
+## Lazy-loading
+
+Skills, Projects, and Certifications are `React.lazy` + `Suspense`. Landing, About, Contact, and Footer load eagerly. The `lazyFallback` is a `min-h-screen` div so the IntersectionObserver for nav highlighting stays accurate during load.
 
 ## Critical rules
 
@@ -49,6 +55,12 @@ Implementation proceeds one phase at a time. All phase contracts in `specs/` (ph
 - **Content is decoupled into `src/data/*.js`** — components read from data files, never hardcode titles/URLs.
 - **Projects count is 4** (masterPlan decision #4). Do not add a 5th without asking.
 - **Environment variables in `/.env`** — never committed. Contact form (Phase 8) uses Formspree; the only env var is `VITE_FORMSPREE_ID`.
+- **Canvas/WebGL effects MUST be wrapped in `<EffectBoundary>`** — `src/components/EffectBoundary/EffectBoundary.jsx` catches crashes silently so a broken effect does not crash the entire app. This applies to `FogBackground`, `LightningBackground`, `CursorSparkTrail`, and any future canvas-based component.
+- **FogBackground is always active** — even under `prefers-reduced-motion`, the fog keeps its ambient drift + scroll-linked parallax (intentional exception, masterPlan step 2.1c). Lightning and cursor trail are omitted under reduced motion.
+
+## Custom Tailwind utilities
+
+- `scrollbar-hide` — hides scrollbars (used on carousel/overflow containers). Defined in `src/index.css`, not in Tailwind config.
 
 ## Verification
 
