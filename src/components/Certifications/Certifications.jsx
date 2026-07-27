@@ -8,11 +8,6 @@ import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion.js'
 import { useMediaQuery } from '../../hooks/useMediaQuery.js'
 
 const N = certifications.length
-const CARD_W = 520
-const GAP = 48
-const STEP = CARD_W + GAP
-// card height: image (16:9) + body block
-const CARD_H = Math.round((CARD_W * 9) / 16) + 150
 
 // Signed shortest offset around the ring: -2..3 for N=6.
 const offset = (i, idx) => {
@@ -25,6 +20,12 @@ const offset = (i, idx) => {
 export default function Certifications() {
   const reduced = usePrefersReducedMotion()
   const isDesktop = useMediaQuery('(min-width: 640px)')
+  // Smaller cards on mobile so they don't touch the viewport edges.
+  const CARD_W = isDesktop ? 520 : 300
+  const GAP = isDesktop ? 48 : 20
+  const STEP = CARD_W + GAP
+  // card height: image (16:9) + body block
+  const CARD_H = Math.round((CARD_W * 9) / 16) + 150
   const [index, setIndex] = useState(0)
   const [open, setOpen] = useState(false)
 

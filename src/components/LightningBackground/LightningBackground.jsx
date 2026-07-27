@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { useMediaQuery } from '../../hooks/useMediaQuery.js'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion.js'
 
 function randomBetween(a, b) {
@@ -41,7 +40,6 @@ function createStrike(canvasW, canvasH) {
 export default function LightningBackground() {
   const canvasRef = useRef(null)
   const prefersReduced = usePrefersReducedMotion()
-  const isDesktop = useMediaQuery('(min-width: 768px)')
 
   useEffect(() => {
     if (prefersReduced) return
@@ -50,6 +48,10 @@ export default function LightningBackground() {
     if (!canvas) return
     const ctx = canvas.getContext('2d')
 
+    // Snapshot viewport class once at mount so the effect doesn't re-run
+    // when the window crosses the 768px breakpoint (which used to wipe the
+    // canvas and re-attach the lazy-init observer off-screen).
+    const isDesktop = window.matchMedia('(min-width: 768px)').matches
     const maxStrikes = isDesktop ? 3 : 1 // Throttle to 1 bolt on mobile for smoothness
     let animId = null
     let strikes = []
@@ -131,26 +133,18 @@ export default function LightningBackground() {
       }
     }
 
-    const target = document.getElementById('landing')
-    if (!target) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          startLoop()
-        }
-      },
-      { threshold: 0 }
-    )
-
-    observer.observe(target)
+    // Start the loop immediately on mount. The lazy-init gate on #landing
+    // was racy: F5 on a deep-link section, browser scroll-restore, and any
+    // effect re-run could leave the canvas off-screen and the observer
+    // would never fire isIntersecting:true. The loop is cheap, and the
+    // tab-visibility handler already pauses when the page is hidden.
+    startLoop()
 
     return () => {
       cancelAnimationFrame(animId)
       window.removeEventListener('resize', resize)
-      observer.disconnect()
     }
-  }, [prefersReduced, isDesktop])
+  }, [prefersReduced])
 
   if (prefersReduced) return null
 

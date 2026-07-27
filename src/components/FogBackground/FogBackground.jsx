@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { useMediaQuery } from '../../hooks/useMediaQuery.js'
 
 // WebGL fragment-shader fog — dark storm-tuned palette, FBM noise.
 // Sits behind the lightning canvas (z 0 vs lightning z 1). Canvas is
@@ -87,7 +86,6 @@ function fragSrc(octaves) {
 
 export default function FogBackground() {
   const canvasRef = useRef(null)
-  const isDesktop = useMediaQuery('(min-width: 768px)')
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -103,8 +101,9 @@ export default function FogBackground() {
     }
 
     const program = gl.createProgram()
+    const octaves = window.matchMedia('(min-width: 768px)').matches ? 6 : 4
     gl.attachShader(program, compileShader(gl.VERTEX_SHADER, VERT_SRC))
-    gl.attachShader(program, compileShader(gl.FRAGMENT_SHADER, fragSrc(isDesktop ? 6 : 4)))
+    gl.attachShader(program, compileShader(gl.FRAGMENT_SHADER, fragSrc(octaves)))
     gl.linkProgram(program)
     gl.useProgram(program)
 
@@ -171,33 +170,20 @@ export default function FogBackground() {
     }
     document.addEventListener('visibilitychange', onVisibility)
 
-    // Lazy-init on #landing — matches LightningBackground (masterPlan 2.2).
-    // Fog stays site-wide once started (decision #2), but doesn't spin up
-    // before the landing section is visible.
-    let observer = null
-    const target = document.getElementById('landing')
-    if (!target) {
-      startLoop()
-    } else {
-      observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            startLoop()
-            observer.disconnect()
-          }
-        },
-        { threshold: 0 }
-      )
-      observer.observe(target)
-    }
+    // Start the loop immediately on mount. The fog is light (50% scale,
+    // 4-6 octaves) and visibilitychange already pauses the loop when the
+    // tab is hidden, so a lazy-init gate on #landing was not worth the
+    // edge-case races it caused (F5 on a deep link, scroll-restore after
+    // the observer is set up, and any re-run of this effect from
+    // dependency changes). Fog stays site-wide once started (masterPlan #2).
+    startLoop()
 
     return () => {
       cancelAnimationFrame(animId)
       window.removeEventListener('resize', resize)
       document.removeEventListener('visibilitychange', onVisibility)
-      if (observer) observer.disconnect()
     }
-  }, [isDesktop])
+  }, [])
 
   return (
     <canvas
