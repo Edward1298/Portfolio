@@ -1,21 +1,8 @@
 import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Loader2, Send, Paperclip, X } from 'lucide-react'
+import { Loader2, Send } from 'lucide-react'
 import { contactConfig } from '../../data/contact.js'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion.js'
-
-const MAX_FILE_SIZE = 25 * 1024 * 1024
-// Include HEIC/HEIF (iPhone/iPad camera default) and webp. Formspree may still
-// reject some formats on free plans — size check is the hard client-side gate.
-const ACCEPTED_TYPES = ['.pdf', '.png', '.jpg', '.jpeg', '.webp', '.heic', '.heif']
-const ACCEPTED_MIME = [
-  'application/pdf',
-  'image/png',
-  'image/jpeg',
-  'image/webp',
-  'image/heic',
-  'image/heif',
-]
 
 const STATUS = {
   IDLE: 'idle',
@@ -28,67 +15,8 @@ export default function Contact() {
   const reduced = usePrefersReducedMotion()
   const configured = contactConfig.isConfigured()
   const [status, setStatus] = useState(STATUS.IDLE)
-  const [file, setFile] = useState(null)
-  const [fileError, setFileError] = useState('')
   const [submitError, setSubmitError] = useState('')
-  const [isDragging, setIsDragging] = useState(false)
-  const fileInputRef = useRef(null)
   const formRef = useRef(null)
-
-  // Shared validation used by both the file picker and the drop event.
-  const validateAndSetFile = (f) => {
-    setFileError('')
-    if (!f) {
-      setFile(null)
-      if (fileInputRef.current) fileInputRef.current.value = ''
-      return
-    }
-    if (f.size > MAX_FILE_SIZE) {
-      setFileError(`File too large (${(f.size / 1024 / 1024).toFixed(1)}MB). Max 25MB.`)
-      setFile(null)
-      if (fileInputRef.current) fileInputRef.current.value = ''
-      return
-    }
-    // iOS often reports empty type for HEIC — fall back to extension check.
-    const name = (f.name || '').toLowerCase()
-    const extOk = ACCEPTED_TYPES.some((ext) => name.endsWith(ext))
-    const mimeOk = !f.type || ACCEPTED_MIME.includes(f.type) || f.type.startsWith('image/')
-    if (!extOk && !mimeOk) {
-      setFileError('File type not supported. Use PDF, PNG, JPG, WEBP, or HEIC.')
-      setFile(null)
-      if (fileInputRef.current) fileInputRef.current.value = ''
-      return
-    }
-    setFile(f)
-  }
-
-  const handleFileChange = (e) => {
-    validateAndSetFile(e.target.files?.[0])
-  }
-
-  // HTML5 drag-and-drop on the dropzone. preventDefault on dragover is
-  // what tells the browser this element accepts the drop.
-  const handleDragOver = (e) => {
-    e.preventDefault()
-    if (status !== STATUS.SENDING) setIsDragging(true)
-  }
-  const handleDragLeave = (e) => {
-    e.preventDefault()
-    setIsDragging(false)
-  }
-  const handleDrop = (e) => {
-    e.preventDefault()
-    setIsDragging(false)
-    if (status === STATUS.SENDING) return
-    const f = e.dataTransfer.files?.[0]
-    if (f) validateAndSetFile(f)
-  }
-
-  const removeFile = () => {
-    setFile(null)
-    setFileError('')
-    if (fileInputRef.current) fileInputRef.current.value = ''
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -100,7 +28,6 @@ export default function Contact() {
     const form = e.target
     const formData = new FormData(form)
     formData.append('_subject', contactConfig.subject)
-    if (file) formData.append('attachment', file, file.name)
 
     try {
       const res = await fetch(contactConfig.getEndpoint(), {
@@ -111,12 +38,8 @@ export default function Contact() {
 
       if (res.ok) {
         setStatus(STATUS.SUCCESS)
-        setFile(null)
         form.reset()
       } else {
-        // Surface Formspree's actual error message (if any) so the user
-        // can tell whether it's an unactivated form, a deactivated form,
-        // a quota issue, or something else. Keep the 429 message specific.
         let msg = 'Something went wrong, please try again.'
         try {
           const data = await res.json()
@@ -161,9 +84,7 @@ export default function Contact() {
         ) : (
           <form ref={formRef} onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
-              {/* Left column — Full Name + Company + Email (smaller fields so
-                  the three of them match the total height of the two right
-                  fields: Attachment + Message). */}
+              {/* Left column — Full Name + Company + Email */}
               <div className="flex flex-col gap-5">
                 <div>
                   <label htmlFor="name" className="block font-sans text-sm text-secondary mb-1.5">
@@ -212,87 +133,21 @@ export default function Contact() {
                 </div>
               </div>
 
-              {/* Right column — Attachment + Message */}
-              <div className="flex flex-col gap-5">
-                <div>
-                  <label htmlFor="attachment" className="block font-sans text-sm text-secondary mb-1.5">
-                    Attachment
-                  </label>
-                  <div
-                    onDragOver={handleDragOver}
-                    onDragEnter={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                    className={`flex items-center gap-3 h-24 rounded-md border-2 border-dashed px-4 py-3 transition-colors ${
-                      isDragging
-                        ? 'border-accent bg-accent/10'
-                        : fileError
-                        ? 'border-cta'
-                        : 'border-subtle hover:border-accent'
-                    }`}
-                  >
-                    <Paperclip size={18} className="shrink-0 text-secondary" aria-hidden="true" />
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      id="attachment"
-                      name="attachment"
-                      accept={[...ACCEPTED_TYPES, 'image/*'].join(',')}
-                      onChange={handleFileChange}
-                      disabled={status === STATUS.SENDING}
-                      className="sr-only"
-                      tabIndex={0}
-                      aria-label="Attach a file (PDF, PNG, JPG, HEIC — up to 25MB)"
-                    />
-                    {file ? (
-                      <span className="flex-1 flex items-center gap-2 min-w-0">
-                        <span className="truncate text-sm text-primary">{file.name}</span>
-                        <span className="text-xs text-disabled shrink-0">
-                          ({(file.size / 1024 / 1024).toFixed(1)}MB)
-                        </span>
-                        <button
-                          type="button"
-                          onClick={removeFile}
-                          disabled={status === STATUS.SENDING}
-                          className="ml-auto shrink-0 p-1 text-secondary hover:text-primary transition-colors"
-                          aria-label="Remove file"
-                        >
-                          <X size={16} />
-                        </button>
-                      </span>
-                    ) : (
-                      <label htmlFor="attachment" className="flex-1 cursor-pointer">
-                        <span className="text-sm text-secondary">
-                          {isDragging ? 'Drop to attach' : 'Attach file or drag and drop'}{' '}
-                          <span className="text-disabled">
-                            (PDF, PNG, JPG, HEIC — up to 25MB)
-                          </span>
-                        </span>
-                      </label>
-                    )}
-                  </div>
-                  {fileError && (
-                    <p className="mt-1.5 text-cta text-xs font-medium" role="alert">
-                      {fileError}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block font-sans text-sm text-secondary mb-1.5">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    aria-required="true"
-                    rows={4}
-                    disabled={status === STATUS.SENDING}
-                    className="w-full h-24 rounded-md border border-subtle bg-surface px-4 py-3 text-primary placeholder:text-secondary focus:border-accent focus:shadow-glow-sm focus:outline-none transition-colors resize-none"
-                    placeholder="Tell me about the role or project…"
-                  />
-                </div>
+              {/* Right column — Message fills the full column height */}
+              <div className="flex flex-col">
+                <label htmlFor="message" className="block font-sans text-sm text-secondary mb-1.5">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  aria-required="true"
+                  rows={6}
+                  disabled={status === STATUS.SENDING}
+                  className="w-full flex-1 min-h-0 rounded-md border border-subtle bg-surface px-4 py-3 text-primary placeholder:text-secondary focus:border-accent focus:shadow-glow-sm focus:outline-none transition-colors resize-none"
+                  placeholder="Tell me about the role or project…"
+                />
               </div>
             </div>
 
