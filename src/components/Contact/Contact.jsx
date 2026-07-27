@@ -5,7 +5,17 @@ import { contactConfig } from '../../data/contact.js'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion.js'
 
 const MAX_FILE_SIZE = 25 * 1024 * 1024
-const ACCEPTED_TYPES = ['.pdf', '.png', '.jpg', '.jpeg']
+// Include HEIC/HEIF (iPhone/iPad camera default) and webp. Formspree may still
+// reject some formats on free plans — size check is the hard client-side gate.
+const ACCEPTED_TYPES = ['.pdf', '.png', '.jpg', '.jpeg', '.webp', '.heic', '.heif']
+const ACCEPTED_MIME = [
+  'application/pdf',
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'image/heic',
+  'image/heif',
+]
 
 const STATUS = {
   IDLE: 'idle',
@@ -35,6 +45,16 @@ export default function Contact() {
     }
     if (f.size > MAX_FILE_SIZE) {
       setFileError(`File too large (${(f.size / 1024 / 1024).toFixed(1)}MB). Max 25MB.`)
+      setFile(null)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+      return
+    }
+    // iOS often reports empty type for HEIC — fall back to extension check.
+    const name = (f.name || '').toLowerCase()
+    const extOk = ACCEPTED_TYPES.some((ext) => name.endsWith(ext))
+    const mimeOk = !f.type || ACCEPTED_MIME.includes(f.type) || f.type.startsWith('image/')
+    if (!extOk && !mimeOk) {
+      setFileError('File type not supported. Use PDF, PNG, JPG, WEBP, or HEIC.')
       setFile(null)
       if (fileInputRef.current) fileInputRef.current.value = ''
       return
@@ -217,12 +237,12 @@ export default function Contact() {
                       type="file"
                       id="attachment"
                       name="attachment"
-                      accept={ACCEPTED_TYPES.join(',')}
+                      accept={[...ACCEPTED_TYPES, 'image/*'].join(',')}
                       onChange={handleFileChange}
                       disabled={status === STATUS.SENDING}
                       className="sr-only"
                       tabIndex={0}
-                      aria-label="Attach a file (PDF, PNG, JPG — up to 25MB)"
+                      aria-label="Attach a file (PDF, PNG, JPG, HEIC — up to 25MB)"
                     />
                     {file ? (
                       <span className="flex-1 flex items-center gap-2 min-w-0">
@@ -245,7 +265,7 @@ export default function Contact() {
                         <span className="text-sm text-secondary">
                           {isDragging ? 'Drop to attach' : 'Attach file or drag and drop'}{' '}
                           <span className="text-disabled">
-                            (PDF, PNG, JPG — up to 25MB)
+                            (PDF, PNG, JPG, HEIC — up to 25MB)
                           </span>
                         </span>
                       </label>
