@@ -68,9 +68,9 @@ src/
 │   ├── projects.js
 │   ├── skills.js
 │   ├── timeline.js
-│   └── certifications.js
-└── assets/                   # Local static assets imported in code
-    ├── sounds/               # Keyboard key clips (Howler.js)
+│   ├── certifications.js
+│   └── contact.js
+└── assets/
     └── images/               # Screenshots, logos, icons
 ```
 
@@ -126,9 +126,7 @@ src/components/
 ├── Footer/
 │   └── Footer.jsx
 ├── Contact/
-│   ├── Contact.jsx
-│   ├── ElectricBorder.jsx       # Canvas-based animated electric border (reactbits)
-│   └── ElectricBorder.css
+│   └── Contact.jsx
 ```
 
 ### Per-folder contents
@@ -188,4 +186,4 @@ Before creating any new file or folder under `src/` (or at root level), check th
 
 ---
 
-*Last updated: replaced `SkillsCircuit/` with `SkillsLoop/` — infinite categorized marquee. No ShinyText or SVG viewBox layout. CSS-flow-based, resize-safe.
+*Last updated: removed `ElectricBorder/` (replaced with plain bordered card), removed empty `assets/sounds/` (no audio implemented), pruned stale deps (`@splinetool/*`, `ogl`). SkillsLoop is the canonical skills section (CSS marquee, no Spline, no GSAP). Contact form renders into a 2-column grid (Full Name + Company + Email on the left, Attachment + Message on the right, submit spans both) inside a `max-w-4xl` surface card; submitted to Formspree via `VITE_FORMSPREE_ID`.

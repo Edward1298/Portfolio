@@ -32,6 +32,9 @@
   overflow: hidden;
   mask-image: linear-gradient(to right, transparent 0%, black 40px, black calc(100% - 40px), transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40px, black calc(100% - 40px), transparent 100%);
+  /* Top + bottom padding so the chip's hover translateY(-2px) doesn't get
+     clipped by the track's overflow:hidden. */
+  padding: 2px 0;
 }
 
 .skill-row__track--static {

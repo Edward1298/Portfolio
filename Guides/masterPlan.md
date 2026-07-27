@@ -15,8 +15,8 @@ No database required.
 | 3 | Cursor spark trail color | **Same `#5B8FFF`** as the bolts — revisit if it reads off |
 | 4 | Projects | **4 projects**, stacking-cards style per motionsites.ai reference (updated from 5 per phase-6 spec) |
 | 5 | Certifications | **5 titles**, horizontal carousel with cards |
-| 6 | Skills keyboard sound | **No mute** — sound assumed subtle |
-| 7 | Skills keyboard interaction polish | CSS-only keycap grid (no Spline, no GSAP, no new deps). Added: **cursor-follow spotlight** `#5B8FFF` (hover-only — fades in on `mouseenter`, out on `mouseleave`); **on-press spark burst** (~400ms fade, accent/bolt-core colors); **permanent board tilt** via CSS `perspective` + slight `rotateX` (a few degrees only); **idle micro-flicker** = nice-to-have, **not** DoD. All decorative motion gates on `prefers-reduced-motion: reduce` (keyboard stays fully usable, static fallback). |
+| 6 | Skills keyboard sound | **Not applicable** — SkillsCircuit was replaced by `SkillsLoop` (CSS marquee, no audio) |
+| 7 | Skills interaction polish | `SkillsLoop` — infinite CSS-keyframe marquee, three categorized rows (Backend / Tools / Frontend), `mask-image` edge fade, hover pauses the row, chip hover lifts with accent border + glow. No Spline, no GSAP, no audio. Decorative motion gates on `prefers-reduced-motion: reduce` (renders as static wrapped grid). |
 
 ---
 
@@ -51,9 +51,9 @@ No database required.
 | Step | What |
 |---|---|
 | 2.1 | **Lightning canvas** — `LightningBackground.jsx` based on Lightning.jsx reference; small background bolts (depth 5, 2–3 simultaneous, `shadowBlur` active) |
-| 2.1c | **Fog layer** — `FogBackground.jsx` (own component, mounted alongside lightning): WebGL fragment-shader FBM noise, dark storm-tuned palette (base `#0A0C12`, mist `rgba(0.16,0.19,0.28)`, accent tinted toward `#5B8FFF`). Behind lightning canvas (z 0 vs lightning z 1). Canvas is `position:fixed` (viewport-sized, efficient) but the shader displaces its noise coords by `window.scrollY / innerHeight * 0.5` — the fog drifts at half the page scroll speed (gentle parallax, less nauseating than near-1:1). Perf gates: DPR cap 1, half-res render + CSS upscale, 6 FBM octaves desktop / 4 mobile, `IntersectionObserver` lazy-init on `#landing`, `visibilitychange` pause. Mobile throttle (`<768px`). Reduced-motion: **deliberate exception** — fog keeps its gentle ambient drift + scroll-linked displacement (slow/ambient, atmospheric base of the site); lightning still omitted entirely under reduced-motion. |
-| 2.2 | **Lazy-init** — `IntersectionObserver` on the Landing section starts the canvas loop |
-| 2.3 | **`prefers-reduced-motion`** — disable canvas entirely if detected |
+| 2.1c | **Fog layer** — `FogBackground.jsx` (own component, mounted alongside lightning): WebGL fragment-shader FBM noise, dark storm-tuned palette. Behind lightning canvas (z 0 vs lightning z 1). Canvas is `position:fixed` (viewport-sized, efficient) but the shader displaces its noise coords by `window.scrollY / innerHeight * 0.5` — the fog drifts at half the page scroll speed (gentle parallax, less nauseating than near-1:1). Perf gates: DPR cap 1, half-res render + CSS upscale, octaves chosen at mount (6 desktop / 4 mobile), `visibilitychange` pause. Loop starts immediately on mount (no observer gate — the previous IntersectionObserver was racy across F5-on-deep-link and breakpoint re-runs). Mobile throttle (`<768px`). Reduced-motion: **deliberate exception** — fog keeps its gentle ambient drift + scroll-linked displacement (slow/ambient, atmospheric base of the site); lightning still omitted entirely under reduced-motion. |
+| 2.2 | **Immediate start** — fog and lightning rAF loops start on mount. Removed the previous `IntersectionObserver`-on-`#landing` gate after it was diagnosed as the root cause of the canvas-disappears-on-resize bug (and a related F5-on-deep-link race). |
+| 2.3 | **`prefers-reduced-motion`** — disable lightning + cursor trail. Fog keeps ambient drift (deliberate exception). |
 | 2.4 | **Mobile throttle** — if `window.innerWidth < 768`, reduce bolt count or disable |
 | 2.5 | **Cursor spark trail** — `CursorSparkTrail.jsx`, accent `#5B8FFF`, lazy-init after first user interaction |
 | 2.6 | Performance: `requestAnimationFrame` cleanup, destroy on unmount |
@@ -129,12 +129,11 @@ No database required.
 | 8.1 | "Let's work together" heading + short subtitle |
 | 8.2 | Contact form — name, email, message, and file attachment fields |
 | 8.3 | Submit via **Formspree** (unchanged integration, extended to support file uploads) |
-| 8.4 | Wrapped in **ElectricBorder** (reactbits Canvas-based animated border) — accent `#5B8FFF` |
+| 8.4 | **Plain bordered card** — `bg-surface border border-subtle shadow-card` on a `max-w-4xl` container. (ElectricBorder was removed; the animated border was distracting and didn't fit the rest of the site's restraint.) |
 | 8.5 | Regular submit button styled with warm CTA `#F2A93B` — `hover:brightness-110`, disabled state, inline-flex with Send icon and loading spinner |
 | 8.6 | File attachment: dashed-border row, Paperclip icon, accepts PDF/PNG/JPG, 25MB max (Formspree system limit), filename display + remove button |
-| 8.7 | Success/error feedback rendered **inline** inside the electric-bordered card — success replaces form content, error preserves fields |
-| 8.8 | `prefers-reduced-motion` — ElectricBorder replaced with static bordered card (no canvas) |
-| 8.9 | *(removed — SpecularButton dropped, `ogl` dependency no longer needed but may be cleaned up)* |
+| 8.7 | Success/error feedback rendered **inline** inside the card — success replaces form content, error preserves fields |
+| 8.8 | Form fields laid out as a 2-column grid (`sm:grid-cols-2`): left = Full Name / Company / Email at `h-12`, right = Attachment / Message at `h-24`. The 3 left fields are sized so their column total matches the 2 right fields' total. Submit spans the full width below both columns. |
 
 ---
 
