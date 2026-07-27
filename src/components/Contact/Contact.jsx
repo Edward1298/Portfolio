@@ -21,14 +21,16 @@ export default function Contact() {
   const [file, setFile] = useState(null)
   const [fileError, setFileError] = useState('')
   const [submitError, setSubmitError] = useState('')
+  const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef(null)
   const formRef = useRef(null)
 
-  const handleFileChange = (e) => {
-    const f = e.target.files?.[0]
+  // Shared validation used by both the file picker and the drop event.
+  const validateAndSetFile = (f) => {
     setFileError('')
     if (!f) {
       setFile(null)
+      if (fileInputRef.current) fileInputRef.current.value = ''
       return
     }
     if (f.size > MAX_FILE_SIZE) {
@@ -38,6 +40,28 @@ export default function Contact() {
       return
     }
     setFile(f)
+  }
+
+  const handleFileChange = (e) => {
+    validateAndSetFile(e.target.files?.[0])
+  }
+
+  // HTML5 drag-and-drop on the dropzone. preventDefault on dragover is
+  // what tells the browser this element accepts the drop.
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    if (status !== STATUS.SENDING) setIsDragging(true)
+  }
+  const handleDragLeave = (e) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
+  const handleDrop = (e) => {
+    e.preventDefault()
+    setIsDragging(false)
+    if (status === STATUS.SENDING) return
+    const f = e.dataTransfer.files?.[0]
+    if (f) validateAndSetFile(f)
   }
 
   const removeFile = () => {
@@ -56,7 +80,7 @@ export default function Contact() {
     const form = e.target
     const formData = new FormData(form)
     formData.append('_subject', contactConfig.subject)
-    if (file) formData.append('attachment', file)
+    if (file) formData.append('attachment', file, file.name)
 
     try {
       const res = await fetch(contactConfig.getEndpoint(), {
@@ -70,13 +94,29 @@ export default function Contact() {
         setFile(null)
         form.reset()
       } else {
-        const msg = res.status === 429
-          ? 'Too many submissions. Please wait and try again.'
-          : 'Something went wrong, please try again.'
+        // Surface Formspree's actual error message (if any) so the user
+        // can tell whether it's an unactivated form, a deactivated form,
+        // a quota issue, or something else. Keep the 429 message specific.
+        let msg = 'Something went wrong, please try again.'
+        try {
+          const data = await res.json()
+          if (Array.isArray(data?.errors) && data.errors[0]?.message) {
+            msg = data.errors[0].message
+          } else if (typeof data?.error === 'string') {
+            msg = data.error
+          }
+        } catch {
+          // non-JSON body — keep the generic message
+        }
+        if (res.status === 429) {
+          msg = 'Too many submissions. Please wait and try again.'
+        }
+        console.error('Formspree submission failed:', res.status, msg)
         setSubmitError(msg)
         setStatus(STATUS.ERROR)
       }
-    } catch {
+    } catch (err) {
+      console.error('Contact form network error:', err)
       setSubmitError('Network error. Check your connection and try again.')
       setStatus(STATUS.ERROR)
     }
@@ -158,7 +198,19 @@ export default function Contact() {
                   <label htmlFor="attachment" className="block font-sans text-sm text-secondary mb-1.5">
                     Attachment
                   </label>
-                  <div className={`flex items-center gap-3 h-24 rounded-md border-2 border-dashed px-4 py-3 transition-colors ${fileError ? 'border-cta' : 'border-subtle hover:border-accent'}`}>
+                  <div
+                    onDragOver={handleDragOver}
+                    onDragEnter={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    className={`flex items-center gap-3 h-24 rounded-md border-2 border-dashed px-4 py-3 transition-colors ${
+                      isDragging
+                        ? 'border-accent bg-accent/10'
+                        : fileError
+                        ? 'border-cta'
+                        : 'border-subtle hover:border-accent'
+                    }`}
+                  >
                     <Paperclip size={18} className="shrink-0 text-secondary" aria-hidden="true" />
                     <input
                       ref={fileInputRef}
@@ -191,7 +243,7 @@ export default function Contact() {
                     ) : (
                       <label htmlFor="attachment" className="flex-1 cursor-pointer">
                         <span className="text-sm text-secondary">
-                          Attach file{' '}
+                          {isDragging ? 'Drop to attach' : 'Attach file or drag and drop'}{' '}
                           <span className="text-disabled">
                             (PDF, PNG, JPG — up to 25MB)
                           </span>

@@ -3,10 +3,12 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { projects } from '../../data/projects.js'
 import ProjectCard from './ProjectCard/ProjectCard.jsx'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion.js'
+import { useMediaQuery } from '../../hooks/useMediaQuery.js'
 
 // Scroll math: card i slides up (y 100%→0%) during segment [(i-1)/n, i/n];
 // once covered, it scales 1→1-(n-1-i)*0.04 and dims to 0.7 over [i/n, 1].
-// Stacking works on all screen sizes — only disabled by reduced-motion.
+// Stacking is disabled on short viewports (cards would clip header + story)
+// and on prefers-reduced-motion. Both fall back to a vertical list.
 function StackedCard({ project, index, total, progress }) {
   const enterStart = (index - 1) / total
   const enterEnd = index / total
@@ -43,13 +45,17 @@ function CardList({ items }) {
 
 export default function Projects() {
   const reduced = usePrefersReducedMotion()
+  // Stacking cards clip on short viewports (phone portrait / laptop) because
+  // the sticky container is h-screen and card content (image + story + header)
+  // can exceed 100vh. Fall back to a scrollable vertical list instead.
+  const isShortViewport = useMediaQuery('(max-height: 700px)')
   const trackRef = useRef(null)
   const { scrollYProgress } = useScroll({
     target: trackRef,
     offset: ['start start', 'end end'],
   })
 
-  const usePinnedStack = !reduced
+  const usePinnedStack = !reduced && !isShortViewport
 
   return (
     <section id="projects" className="relative z-10 scroll-mt-20 py-20 sm:py-28">
